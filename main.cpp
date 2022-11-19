@@ -144,8 +144,8 @@ void readAllFolder(){
     cout <<"Total reads number: " <<count<< endl;
 }
 void readFile(){
-//    string s1 =ReadBigFile();
-//    cout << "return s1 " << s1.length()<< endl;
+    string s1 =ReadBigFile();
+    cout << "return s1 " << s1.length()<< endl;
     readAllFolder();
 //    vector v = split(s1,"\n");
 //    cout <<v[7517] << endl;
