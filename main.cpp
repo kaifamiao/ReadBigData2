@@ -1,57 +1,162 @@
 #include <iostream>
 #include <fstream>
 #include<ctime>
-
-#include <exception>
+#include <numeric>    // �������ڵĿ�
+#include <cstring>
+#include <vector>
 
 using namespace std;
 //#define CLOCKS_PER_SEC ((clock_t)1000)
-//注释在:VC++6.0中可以用CLK_TCK替换CLOCKS_PER_SEC。
+//?????:VC++6.0?��?????CLK_TCK?�ICLOCKS_PER_SEC??
 
-int main() {
-    cout << "\nprogram is start..." << endl;
-    clock_t startTime, endTime;
-    startTime = clock();//计时开始
+#include "tools.h"
+struct StockD {
+    unsigned int stock_date;
+    unsigned int stock_open;
+    unsigned int stock_high;
+    unsigned int stock_low;
+    unsigned int stock_close;
+    float stock_amount;
+    unsigned int stock_vol;
+    unsigned int stock_reservation;
+};
 
+
+string ReadBigFile() {
     filebuf *pbuf;
     ifstream filestr;
     long size;
     char *buffer;
-//        // 要读入整个文件，必须采用二进制打开
+    // ???????????????????????????
     filestr.open("../all.csv", ios::binary);
-//        // 获取filestr对应buffer对象的指针
+//    filestr.open("../SZ#000001.txt", ios::binary);
+//    if (!filestr.bad())
+//    {
+//        cout << "Writing to a basic_ofstream object..." << endl;
+//        filestr.close();
+//        return;
+//    }
+    // ???filestr???buffer????????
     pbuf = filestr.rdbuf();
-//
-//        // 调用buffer对象方法获取文件大小
+
+    // ????buffer?????????????��
     size = pbuf->pubseekoff(0, ios::end, ios::in);
     pbuf->pubseekpos(0, ios::in);
-//
-//        // 分配内存空间
-    cout << size << endl;
+
+    // ?????????
+    cout << "File read size : " << double(size / 1000.00 ) << "KB" << endl;
     try {
         buffer = new char[size];
 
-        // 获取文件内容
+        // ??????????
         pbuf->sgetn(buffer, size);
         buffer[size - 1] = '\0';
 
         filestr.close();
-        // 输出到标准输出
-     //   cout.write(buffer, size);
+        // ???????????
+        //cout.write(buffer, size);
 
        // cout <<buffer <<endl;
+
+//        cout << strlen(buffer)   << endl;
+//        StockD stock;
+//        cout << buffer[100]<< endl;
+        int len =strlen(buffer);
+        string s1=buffer;
+        cout <<"read buffer??��\t" << len <<"\tread string s1\t" << s1.length()<<endl;
+      //readfile  s1 = s1+buffer[0];
+//        string tmp="";
+//        int count=0;
+//        int rowcount=0;
+//        for(int i=0;i<len;i++){
+//
+//            if(buffer[i]=='\n'){
+//                count++;
+//            }
+//
+//        }
+//        for(string::iterator it=s1.begin();it!=s1.end();it++){
+//            cout << *it << endl;
+//        }
+//        cout << count <<"??"<< endl;
+       // cout <<tmp;
         delete[]buffer;
-    } catch (std::bad_alloc) {
-        cerr << "read file is error" << endl;
+        return s1;
+    } catch (const char* msg) {
+        cerr << "read file is error" << msg << endl;
     }
-    endTime = clock();//计时结束
 
-    //cout << "\nThe run time is: " << (float ) (endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
-    //system("pause");
+}
 
-    cout << "The run time is:" <<(double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
-    //cout << "The run time is:" << (double)clock() /CLOCKS_PER_SEC<< "s" << endl;
 
-    cout << "\nprogram is ending" << endl;
+string readFileToMemory(const string filename) {
+    filebuf *pbuf;
+    ifstream filestr;
+    long size;
+    char *buffer;
+    // ???????????????????????????
+    filestr.open(filename, ios::binary);
+    pbuf = filestr.rdbuf();
+
+    // ????buffer?????????????��
+    size = pbuf->pubseekoff(0, ios::end, ios::in);
+    pbuf->pubseekpos(0, ios::in);
+
+    // ?????????
+    //cout << "This file "<<filename<<" size : " << double(size / 1000.00 ) << "KB" << endl;
+    try {
+        buffer = new char[size];
+
+        // ??????????
+        pbuf->sgetn(buffer, size);
+        buffer[size - 1] = '\0';
+
+        filestr.close();
+        // ???????????
+        string s1=buffer;
+
+
+        delete[]buffer;
+        return s1;
+    } catch (const char* msg) {
+        cerr << "[readFileToMemory ]read file is error" << msg << endl;
+    }
+
+}
+
+void readAllFolder(){
+    string pathstr ="/Users/linrui/Downloads/export/";
+    vector vec1 = getFilesList(pathstr);
+    cout << "Read folder file number is: "<< vec1.size()<< endl;
+    int count=0;
+    vector<string>vt;
+    for (int i = 0; i < vec1.size(); i++) {
+        string filepath = pathstr+vec1[i];
+        string read_s = readFileToMemory(filepath);
+        vector v = split(read_s,"\n");
+        string strData;
+        strData = accumulate(v.begin(), v.end(), strData);
+        vt.push_back(strData);
+        count++;
+    }
+    cout <<vt.size() <<endl;
+  //  cout << filepath << " " << endl;
+   // cout << readFileToMemory(filepath);
+    cout <<"Total reads number: " <<count<< endl;
+}
+void readFile(){
+//    string s1 =ReadBigFile();
+//    cout << "return s1 " << s1.length()<< endl;
+    readAllFolder();
+//    vector v = split(s1,"\n");
+//    cout <<v[7517] << endl;
+  //  cout << v.size() <<endl;
+
+}
+int main() {
+   // cout << "===============program is start...===============" << endl;
+    exec(readFile);
+    //cout << "===============program is ending===============" << endl;
+   // cout << "����"<<endl;
     return 0;
 }
