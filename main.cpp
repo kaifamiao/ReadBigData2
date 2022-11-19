@@ -133,10 +133,10 @@ void readAllFolder(){
     for (int i = 0; i < vec1.size(); i++) {
         string filepath = pathstr+vec1[i];
         string read_s = readFileToMemory(filepath);
-        vector v = split(read_s,"\n");
-        string strData;
-        strData = accumulate(v.begin(), v.end(), strData);
-        vt.push_back(strData);
+//        vector v = split(read_s,"\n");
+//        string strData;
+//        strData = accumulate(v.begin(), v.end(), strData);
+//        vt.push_back(strData);
         count++;
     }
     cout <<vt.size() <<endl;
@@ -157,6 +157,6 @@ int main() {
    // cout << "===============program is start...===============" << endl;
     exec(readFile);
     //cout << "===============program is ending===============" << endl;
-   // cout << "½áÊø"<<endl;
+    cout << "½áÊø"<<endl;
     return 0;
 }
