@@ -8,7 +8,6 @@
 using namespace std;
 //#define CLOCKS_PER_SEC ((clock_t)1000)
 //?????:VC++6.0?ß·?????CLK_TCK?ùICLOCKS_PER_SEC??
-
 #include "tools.h"
 struct StockD {
     unsigned int stock_date;
@@ -88,7 +87,7 @@ string ReadBigFile() {
 
 }
 
-
+//readFileToMemory
 string readFileToMemory(const string filename) {
     filebuf *pbuf;
     ifstream filestr;
